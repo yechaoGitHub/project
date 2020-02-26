@@ -15,7 +15,8 @@ void CubeMapApp::Update(const GameTimer &gt)
 {
 	//mCamera.SetLens(0.25 * MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
 	//mCamera.LookAt(DirectX::XMFLOAT3(0, 0, -10), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 1, 0));
-	UpdateCameraWithCubeIndex(1);
+	//UpdateCameraWithCubeIndex(1);
+	mCamera.UpdateViewMatrix();
 	
 	GlobalInfo gbInfo;
 	gbInfo.cameraPos = mCamera.GetPosition3f();
@@ -64,9 +65,9 @@ void CubeMapApp::Draw(const GameTimer &gt)
 
 	mCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(CurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON));
 
-	mCommandList.ResourceBarrier(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_SOURCE);
+	/*mCommandList.ResourceBarrier(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_SOURCE);
 	mCommandList.ReadBackTexture(mRtvReadBack, CurrentBackBuffer(), 0, 1);
-	mCommandList.ResourceBarrier(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COMMON);
+	mCommandList.ResourceBarrier(CurrentBackBuffer(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_COMMON);*/
 
 	ThrowIfFailed(mCommandList->Close());
 
@@ -74,7 +75,7 @@ void CubeMapApp::Draw(const GameTimer &gt)
 	mCommandQueue->ExecuteCommandLists(1, cmdList);
 	FlushCommandQueue();
 
-	D3D12_RESOURCE_DESC rtvDesc = CurrentBackBuffer()->GetDesc();
+	/*D3D12_RESOURCE_DESC rtvDesc = CurrentBackBuffer()->GetDesc();
 
 	void *data = mRtvReadBack.Map(0, nullptr);
 	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footPrint = {};
@@ -89,7 +90,7 @@ void CubeMapApp::Draw(const GameTimer &gt)
 	image.Save(L"IBL.png");
 
 
-	mRtvReadBack.Unmap(0);
+	mRtvReadBack.Unmap(0);*/
 
 	ThrowIfFailed(mSwapChain->Present(1, 0));
 	mCurrBackBuffer = (mCurrBackBuffer + 1) % SwapChainBufferCount;
@@ -118,7 +119,7 @@ void CubeMapApp::OnMouseUp(WPARAM btnState, int x, int y)
 
 void CubeMapApp::OnMouseMove(WPARAM btnState, int x, int y)
 {
-	/*if((btnState & MK_LBUTTON) != 0)
+	if((btnState & MK_LBUTTON) != 0)
 	{
 		float dx = DirectX::XMConvertToRadians(0.25 * (x - mLastMousePt.x));
 		float dy = DirectX::XMConvertToRadians(0.25 * (y - mLastMousePt.y));
@@ -129,7 +130,7 @@ void CubeMapApp::OnMouseMove(WPARAM btnState, int x, int y)
 	}
 
 	mLastMousePt.x = x;
-	mLastMousePt.y = y;*/
+	mLastMousePt.y = y;
 }
 
 void CubeMapApp::OnKeyboardInput(const GameTimer& gt)
