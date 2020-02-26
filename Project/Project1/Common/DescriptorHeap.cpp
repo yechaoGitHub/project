@@ -65,7 +65,7 @@ void DescriptorHeap::BindView(UINT index, ID3D12Resource *resource)
 		break;
 
 		case D3D12_DESCRIPTOR_HEAP_TYPE_DSV:
-			BuildSrvView(index, resource);
+			BuildDsvView(index, resource);
 		break;
 
 		case D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES:
@@ -94,7 +94,8 @@ void DescriptorHeap::BuildRtvView(UINT index, ID3D12Resource *resource)
 	//D3D12_RENDER_TARGET_VIEW_DESC rtvView = {};
 	//rtvView.ViewDimension = 
 
-	//device->CreateRenderTargetView(resource, nullptr, GetCpuDescriptorHandle(index));
+	device->CreateRenderTargetView(resource, nullptr, GetCpuDescriptorHandle(index));
+	device->Release();
 }
 
 void DescriptorHeap::BuildSrvView(UINT index, ID3D12Resource *resource)
@@ -145,6 +146,8 @@ void DescriptorHeap::BuildSrvView(UINT index, ID3D12Resource *resource)
 		ThrowIfFailed(E_FAIL);
 		break;
 	}
+
+	device->Release();
 }
 
 void DescriptorHeap::BuildDsvView(UINT index, ID3D12Resource *resource)
@@ -154,6 +157,7 @@ void DescriptorHeap::BuildDsvView(UINT index, ID3D12Resource *resource)
 	resource->GetDevice(IID_PPV_ARGS(&device));
 
 	device->CreateDepthStencilView(resource, nullptr, GetCpuDescriptorHandle(index));
+	device->Release();
 }
 
 void DescriptorHeap::Clear()
